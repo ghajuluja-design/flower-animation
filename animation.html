@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Realistic Blooming Flower</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, #0b1026 0%, #000000 100%);
+    overflow: hidden;
+    font-family: sans-serif;
+  }
+
+  .scene {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .stars {
+    position: absolute;
+    inset: 0;
+    background-image:      radial-gradient(2px 2px at 20% 30%, white, transparent),
+      radial-gradient(2px 2px at 60% 10%, white, transparent),      radial-gradient(1px 1px at 80% 40%, white, transparent),      radial-gradient(1px 1px at 30% 70%, white, transparent),
+      radial-gradient(2px 2px at 90% 80%, white, transparent),      radial-gradient(1px 1px at 50% 50%, white, transparent);    opacity: 0.7;
+  }
+
+  .flower-wrap {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);    width: 300px;
+    height: 500px;
+  }
+
+  /* Stem grows first */
+  .stem {    position: absolute;    bottom: 0;    left: 50%;    width: 8px;
+    height: 0;
+    background: linear-gradient(to top, #2e6b2e, #4c9a4c);
+    border-radius: 4px;    transform: translateX(-50%);
+    animation: growStem 1.5s cubic-bezier(0.25, 0.8, 0.4, 1) forwards;
+    box-shadow: 0 0 8px rgba(76, 154, 76, 0.5);
+  }
+
+  @keyframes growStem {    to { height: 220px; }
+  }
+
+  /* Leaves on the stem */
+  .stem-leaf {
+    position: absolute;
+    width: 45px;
+    height: 22px;
+    background: linear-gradient(135deg, #3d8b3d, #5cb85c);
+    border-radius: 0 50% 0 50%;
+    opacity: 0;
+    box-shadow: 0 0 6px rgba(92, 184, 92, 0.4);
+  }
+
+  .stem-leaf--1 {
+    bottom: 60px;    left: 50%;
+    transform-origin: left center;
+    animation: leafLeft 1s ease-out 1.2s forwards;
+  }
+
+  .stem-leaf--2 {    bottom: 110px;
+    left: 50%;
+    transform-origin: right center;
+    animation: leafRight 1s ease-out 1.5s forwards;
+  }
+
+  @keyframes leafLeft {
+    0%   { opacity: 0; transform: translateX(-8px) rotate(0deg) scale(0.2); }
+    60%  { opacity: 1; transform: translateX(-45px) rotate(-35deg) scale(1.1); }
+    100% { opacity: 1; transform: translateX(-40px) rotate(-25deg) scale(1); }
+  }
+
+  @keyframes leafRight {    0%   { opacity: 0; transform: translateX(-38px) rotate(0deg) scale(0.2); }
+    60%  { opacity: 1; transform: translateX(0px) rotate(35deg) scale(1.1); }
+    100% { opacity: 1; transform: translateX(-5px) rotate(25deg) scale(1); }
+  }
+
+  /* Flower head container, positioned at top of stem */
+  .flower-head {
+    position: absolute;
+    bottom: 210px;
+    left: 50%;
+    width: 220px;
+    height: 220px;
+    transform: translate(-50%, 0);
+  }
+
+  /* Each petal pair: back layer (4 petals) + front layer (4 petals offset 45deg) */
+  .petal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 46px;
+    height: 100px;
+    margin-top: -100px;
+    margin-left: -23px;
+    background: linear-gradient(to top, #ff6fa3, #ffb3c9 60%, #fff0f5);
+    border-radius: 50% 50% 0 0;
+    transform-origin: bottom center;
+    opacity: 0;
+    box-shadow: 0 0 12px rgba(255, 111, 163, 0.5) inset;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);    animation-fill-mode: forwards;
+    animation-duration: 1.4s;
+  }
+
+  .petal--back  { animation-delay: 1.6s; }
+  .petal--front { animation-delay: 1.9s; }
+
+  .petal--1 { transform: rotate(0deg)   scale(0.1); animation-name: bloom-0; }
+  .petal--2 { transform: rotate(90deg)  scale(0.1); animation-name: bloom-90; }
+  .petal--3 { transform: rotate(180deg) scale(0.1); animation-name: bloom-180; }  .petal--4 { transform: rotate(270deg) scale(0.1); animation-name: bloom-270; }  .petal--5 { transform: rotate(45deg)  scale(0.1); animation-name: bloom-45; }  .petal--6 { transform: rotate(135deg) scale(0.1); animation-name: bloom-135; }
+  .petal--7 { transform: rotate(225deg) scale(0.1); animation-name: bloom-225; }
+  .petal--8 { transform: rotate(315deg) scale(0.1); animation-name: bloom-315; }
+
+  @keyframes bloom-0   { 0%{opacity:0;transform:rotate(0deg) scale(0.1);}100%{opacity:1;transform:rotate(0deg) scale(1);} }
+  @keyframes bloom-90  { 0%{opacity:0;transform:rotate(90deg) scale(0.1);}100%{opacity:1;transform:rotate(90deg) scale(1);} }
+  @keyframes bloom-180 { 0%{opacity:0;transform:rotate(180deg) scale(0.1);}100%{opacity:1;transform:rotate(180deg) scale(1);} }  @keyframes bloom-270 { 0%{opacity:0;transform:rotate(270deg) scale(0.1);}100%{opacity:1;transform:rotate(270deg) scale(1);} }
+  @keyframes bloom-45  { 0%{opacity:0;transform:rotate(45deg) scale(0.1);}100%{opacity:1;transform:rotate(45deg) scale(1);} }
+  @keyframes bloom-135 { 0%{opacity:0;transform:rotate(135deg) scale(0.1);}100%{opacity:1;transform:rotate(135deg) scale(1);} }
+  @keyframes bloom-225 { 0%{opacity:0;transform:rotate(225deg) scale(0.1);}100%{opacity:1;transform:rotate(225deg) scale(1);} }  @keyframes bloom-315 { 0%{opacity:0;transform:rotate(315deg) scale(0.1);}100%{opacity:1;transform:rotate(315deg) scale(1);} }
+
+  /* Flower center */
+  .center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;    background: radial-gradient(circle, #ffe08a, #ffb347);
+    border-radius: 50%;
+    opacity: 0;
+    box-shadow: 0 0 20px rgba(255, 200, 100, 0.8);
+    animation: centerPop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 2.3s forwards;
+    z-index: 5;
+  }
+
+  @keyframes centerPop {
+    0%   { opacity: 0; transform: scale(0); }
+    70%  { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  /* Gentle continuous sway once bloomed, simulating wind physics */
+  .flower-head {
+    animation: sway 4s ease-in-out 3s infinite;
+    transform-origin: bottom center;
+  }
+
+  @keyframes sway {
+    0%, 100% { transform: translate(-50%, 0) rotate(-2deg); }
+    50%      { transform: translate(-50%, 0) rotate(2deg); }
+  }
+
+  .stem {
+    animation: growStem 1.5s cubic-bezier(0.25, 0.8, 0.4, 1) forwards,
+               stemSway 4s ease-in-out 3s infinite;
+    transform-origin: bottom center;
+  }
+
+  @keyframes stemSway {
+    0%, 100% { transform: translateX(-50%) rotate(-1.5deg); }
+    50%      { transform: translateX(-50%) rotate(1.5deg); }
+  }
+
+  .reload-btn {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 24px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;    backdrop-filter: blur(4px);    z-index: 10;
+  }
+
+  .reload-btn:hover {    background: rgba(255,255,255,0.2);
+  }
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="stars"></div>
+  <button class="reload-btn" onclick="restartAnimation()">🌸 Replay Bloom</button>
+
+  <div class="flower-wrap" id="flowerWrap">
+    <div class="stem" id="stem">
+      <div class="stem-leaf stem-leaf--1"></div>
+      <div class="stem-leaf stem-leaf--2"></div>
+    </div>
+
+    <div class="flower-head" id="flowerHead">
+      <div class="petal petal--back petal--1"></div>
+      <div class="petal petal--back petal--2"></div>
+      <div class="petal petal--back petal--3"></div>
+      <div class="petal petal--back petal--4"></div>
+      <div class="petal petal--front petal--5"></div>
+      <div class="petal petal--front petal--6"></div>
+      <div class="petal petal--front petal--7"></div>
+      <div class="petal petal--front petal--8"></div>
+      <div class="center"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function restartAnimation() {    const wrap = document.getElementById('flowerWrap');
+    const clone = wrap.cloneNode(true);
+    wrap.parentNode.replaceChild(clone, wrap);
+  }
+</script>
+
+</body>
+</html>
